@@ -1,14 +1,18 @@
 package io.leonard
 
+import io.leonard.TraitFormat.CaseObjectFormat
+import play.api.libs.json._
+
+import scala.reflect.ClassTag
+
 class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]], discriminator: String) extends Format[Supertype]{
 
   def reads(js: JsValue): JsResult[Supertype] = {
-    val name = js \ discriminator
+    val name = (js \ discriminator).validate[String]
     name match {
-      case JsString(typeName) => mapping.get(typeName)
+      case JsSuccess(typeName, _) => mapping.get(typeName)
         .map(_.reads(js))
         .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminator' in $js."))
-      case JsUndefined() | JsNull => JsError(s"Discriminator property '$discriminator' not found in $js.")
       case _ => JsError(s"Discriminator property '$discriminator' must be a string.")
     }
   }
