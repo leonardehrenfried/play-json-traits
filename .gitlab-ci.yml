@@ -11,5 +11,7 @@ before_script:
   - sbt sbt-version
 
 test:
-  script:
-    - sbt -Dsbt.ivy.home=ivy2/ clean test
+  script: sbt -Dsbt.ivy.home=ivy2/ clean test
+  cache:
+    paths:
+      - ivy2/
