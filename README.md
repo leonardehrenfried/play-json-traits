@@ -1,4 +1,4 @@
-#play-json-traits
+# play-json-traits
 
 This package allows you read and write traits using `play-json`. It does this
 by adding a discriminator property to the JSON which can be used to identify
@@ -22,9 +22,8 @@ animalFormat.writes(doggy).toString
 // returns {"s":"woof!","type":"Dog"}
 
 val animal1: Animal = animalFormat.reads(Json.parse(doggyJson)).get
-// reuturn
+animal1 == doggy
 
-val kittyJson = """{"s":"Meow!","type":"Cat"}"""
-animalFormat.writes(kitty).toString() === kittyJson
+animalFormat.writes(kitty).toString() == """{"s":"Meow!","type":"Cat"}"""
 
 ```
