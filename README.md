@@ -4,9 +4,13 @@ This package allows you read and write traits using `play-json`. It does this
 by adding a discriminator property to the JSON which can be used to identify
 the precise implementation when parsing the JSON back to Scala.
 
-## Example
+## Example usage
 
 ```scala
+import io.leonard.TraitFormat.{ traitFormat, caseObjectFormat }
+import play.api.libs.json.Json.format
+import play.api.libs.json._
+
 sealed trait Animal
 case class Dog(s: String) extends Animal
 case class Cat(s: String) extends Animal
