@@ -19,13 +19,13 @@ class TraitFormatSpec extends FlatSpec with Matchers {
 
     val animalFormat = traitFormat[Animal] << format[Dog] << format[Cat]
 
-    val doggyJson = """{"s":"woof!","tpe":"Dog"}"""
+    val doggyJson = """{"s":"woof!","type":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
 
     val animal1: Animal = animalFormat.reads(Json.parse(doggyJson)).get
     animal1 should be(doggy)
 
-    val kittyJson = """{"s":"Meow!","tpe":"Cat"}"""
+    val kittyJson = """{"s":"Meow!","type":"Cat"}"""
     animalFormat.writes(kitty).toString() should be(kittyJson)
 
     val animal2: Animal = animalFormat.reads(Json.parse(kittyJson)).get
@@ -34,7 +34,7 @@ class TraitFormatSpec extends FlatSpec with Matchers {
 
   it should "serialise a case object" in {
     val animalFormat = traitFormat[Animal] << format[Dog] << format[Cat] << caseObjectFormat(Nessy)
-    val nessyJson = """{"tpe":"Nessy"}"""
+    val nessyJson = """{"type":"Nessy"}"""
     animalFormat.writes(Nessy) should be(Json.parse(nessyJson))
     animalFormat.reads(Json.parse(nessyJson)).get should be(Nessy)
   }

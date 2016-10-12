@@ -46,7 +46,7 @@ class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]
 }
 
 object TraitFormat {
-  val defaultDiscriminator = "tpe"
+  val defaultDiscriminator = "type"
   def traitFormat[T]: TraitFormat[T] = traitFormat(defaultDiscriminator)
   def traitFormat[T](discriminator: String): TraitFormat[T] = new TraitFormat[T](Map(), discriminator)
 
