@@ -12,4 +12,4 @@ before_script:
 
 test:
   script:
-    - sbt clean test
+    - sbt -Dsbt.ivy.home=ivy2/ clean test
