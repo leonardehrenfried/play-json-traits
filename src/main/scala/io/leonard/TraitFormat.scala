@@ -13,7 +13,7 @@ class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]
       case JsSuccess(typeName, _) => mapping.get(typeName)
         .map(_.reads(js))
         .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminator' in $js."))
-      case _ => JsError(s"Discriminator property '$discriminator' must be a string.")
+      case _ => JsError(s"No valid discriminator property '$discriminator' found in $js.")
     }
   }
 

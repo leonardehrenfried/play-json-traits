@@ -52,14 +52,14 @@ class TraitFormatSpec extends FlatSpec with Matchers {
     val animalFormat = traitFormat[Animal]("animalType") << format[Dog] << format[Cat]
     val doggyJson = """{"s":"woof!"}"""
     val jsResult = animalFormat.reads(Json.parse(doggyJson))
-    jsResult should be(JsError(s"Discriminator property 'animalType' not found in $doggyJson."))
+    jsResult should be(JsError(s"No valid discriminator property 'animalType' found in $doggyJson."))
   }
 
   it should "return a JsError if the discriminator is not a string" in {
     val animalFormat = traitFormat[Animal]("animalType") << format[Dog] << format[Cat]
     val doggyJson = """{"s":"woof!","animalType":{"type":"Dog"}}"""
     val jsResult = animalFormat.reads(Json.parse(doggyJson))
-    jsResult should be(JsError("Discriminator property 'animalType' must be a string."))
+    jsResult should be(JsError(s"No valid discriminator property 'animalType' found in $doggyJson."))
   }
 }
 
