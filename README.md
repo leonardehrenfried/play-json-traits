@@ -31,3 +31,14 @@ animal1 == doggy
 animalFormat.writes(kitty).toString() == """{"s":"Meow!","type":"Cat"}"""
 
 ```
+
+## Customisation
+
+By default the discriminator property is called `type`. However, this can
+be customised by doing the following:
+
+```scala
+val animalFormat = traitFormat[Animal]("animalType") << format[Dog] << format[Cat]
+animalFormat.writes(doggy).toString() == """{"s":"woof!","animalType":"Dog"}"""
+```
+

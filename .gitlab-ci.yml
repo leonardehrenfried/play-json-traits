@@ -4,7 +4,7 @@ variables:
   SBT_VERSION: "0.13.9"
 
 before_script:
-  - wget https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb -O sbt.deb
+  - wget https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb -O sbt.deb --quiet
   - dpkg -i sbt.deb
 
 test:
