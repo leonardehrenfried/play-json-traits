@@ -22,7 +22,8 @@ val scalacOpts = Seq(
 val commonSettings = Seq(
   scalaVersion := "2.11.8",
   organization := "io.leonard",
-  scalacOptions ++= scalacOpts
+  scalacOptions ++= scalacOpts,
+  version := "1.0.0"
 )
 
 scalariformSettings ++ Seq(
