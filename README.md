@@ -1,5 +1,7 @@
 # play-json-traits
 
+[![Build Status](https://travis-ci.org/leonardehrenfried/play-json-traits.svg?branch=master)](https://travis-ci.org/leonardehrenfried/play-json-traits)
+
 This package allows you read and write traits using `play-json`. It does this
 by adding a discriminator property to the JSON which can be used to identify
 the precise implementation when parsing the JSON back to Scala.
@@ -42,3 +44,7 @@ val animalFormat = traitFormat[Animal]("animalType") << format[Dog] << format[Ca
 animalFormat.writes(doggy).toString() == """{"s":"woof!","animalType":"Dog"}"""
 ```
 
+## Similar projects
+
+- [play-json-derived-codecs](https://github.com/julienrf/play-json-derived-codecs)
+- [play-json-extensions](https://github.com/xdotai/play-json-extensions)
