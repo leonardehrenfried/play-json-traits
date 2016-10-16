@@ -6,6 +6,16 @@ This package allows you read and write traits using `play-json`. It does this
 by adding a discriminator property to the JSON which can be used to identify
 the precise implementation when parsing the JSON back to Scala.
 
+## Installation
+
+The library is deployed to Maven Central.
+
+Add the following to your `build.sbt`:
+
+```
+"io.leonard" % "play-json-traits" %% "1.0.0"
+```
+
 ## Example usage
 
 ```scala
