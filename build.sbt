@@ -23,7 +23,7 @@ val commonSettings = Seq(
   scalaVersion := "2.11.8",
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
-  version := "1.0.0"
+  version := "1.0.1"
 )
 
 scalariformSettings ++ Seq(
@@ -38,7 +38,6 @@ lazy val `play-json-traits` = project.in(file(".")).
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
-      "org.clapper" %% "grizzled-slf4j" % "1.1.0",
       "com.typesafe.play" %% "play-json" % "2.5.8",
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     )
