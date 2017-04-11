@@ -1,4 +1,4 @@
-addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "0.6.3")
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "1.1")
 

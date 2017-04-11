@@ -1,5 +1,3 @@
-import scalariform.formatter.preferences._
-
 val scalacOpts = Seq(
   "-target:jvm-1.8",
   "-encoding",
@@ -24,14 +22,6 @@ val commonSettings = Seq(
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
   version := "1.0.1"
-)
-
-scalariformSettings ++ Seq(
-  ScalariformKeys.preferences := ScalariformKeys.preferences.value
-    .setPreference(AlignSingleLineCaseStatements, true)
-    .setPreference(DoubleIndentClassDeclaration, true)
-    .setPreference(PreserveDanglingCloseParenthesis, true)
-    .setPreference(PreserveSpaceBeforeArguments, true)
 )
 
 lazy val `play-json-traits` = project.in(file(".")).

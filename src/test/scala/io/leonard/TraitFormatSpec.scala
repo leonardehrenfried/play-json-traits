@@ -22,6 +22,7 @@ class TraitFormatSpec extends FlatSpec with Matchers {
     val doggyJson = """{"s":"woof!","type":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
 
+    println(animalFormat.reads(Json.parse(doggyJson)))
     val animal1: Animal = animalFormat.reads(Json.parse(doggyJson)).get
     animal1 should be(doggy)
 

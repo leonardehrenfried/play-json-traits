@@ -4,13 +4,16 @@ import io.leonard.TraitFormat.CaseObjectFormat
 import play.api.libs.json._
 
 import scala.reflect.ClassTag
-
-class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]], discriminator: String) extends Format[Supertype]{
+case class Mapping[A](
+                               name: String,
+                               format: Format[A]
+                             )
+class TraitFormat[Supertype] private (val mapping: Map[Class[_], Mapping[Supertype]], discriminator: String) extends Format[Supertype]{
 
   def reads(js: JsValue): JsResult[Supertype] = {
     val name = (js \ discriminator).validate[String]
     name match {
-      case JsSuccess(typeName, _) => mapping.get(typeName)
+      case JsSuccess(name, _) => mapping.values.find(_.name == name).map(_.format)
         .map(_.reads(js))
         .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminator' in $js."))
       case _ => JsError(s"No valid discriminator property '$discriminator' found in $js.")
@@ -18,7 +21,7 @@ class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]
   }
 
   def writes(f: Supertype): JsValue = {
-    val format = mapping.get(stripTrailingDollar(f.getClass))
+    val format = mapping.get(f.getClass).map(_.format)
     format.fold(throw new IllegalArgumentException(s"Could not find format for $f. Trait format contains formats ${mapping.keySet}."))(q => q.writes(f))
   }
 
@@ -29,7 +32,7 @@ class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]
     *         Complete example: val animalFormat = traitFormat[Animal] << format[Cat] << caseObjectFormat(Nessy)
     */
   def <<[Subtype <: Supertype](format: Format[Subtype])(implicit tag: ClassTag[Subtype]):TraitFormat[Supertype] = {
-    val newMapping = mapping + (stripTrailingDollar(tag.runtimeClass) -> transform(format))
+    val newMapping = mapping + (tag.runtimeClass -> Mapping(getName(None, tag.runtimeClass), transform(format)))
     new TraitFormat[Supertype](newMapping, discriminator)
   }
 
@@ -38,11 +41,11 @@ class TraitFormat[Supertype] private (val mapping: Map[String, Format[Supertype]
   }
 
   private def transform[Subtype <: Supertype](in: Format[Subtype]): Format[Supertype] = new Format[Supertype] {
-    override def writes(o: Supertype): JsValue = in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminator -> JsString(stripTrailingDollar(o.getClass)))
+    override def writes(o: Supertype): JsValue = in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminator -> JsString(getName(None, o.getClass)))
     override def reads(json: JsValue): JsResult[Supertype] = in.reads(json)
   }
 
-  private def stripTrailingDollar(in: Class[_]): String = in.getSimpleName.stripSuffix("$")
+  private def getName(identifier: Option[String], in: Class[_]): String = identifier.getOrElse(in.getSimpleName.stripSuffix("$"))
 }
 
 object TraitFormat {
