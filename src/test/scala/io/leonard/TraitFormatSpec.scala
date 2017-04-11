@@ -22,7 +22,6 @@ class TraitFormatSpec extends FlatSpec with Matchers {
     val doggyJson = """{"s":"woof!","type":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
 
-    println(animalFormat.reads(Json.parse(doggyJson)))
     val animal1: Animal = animalFormat.reads(Json.parse(doggyJson)).get
     animal1 should be(doggy)
 
@@ -61,5 +60,15 @@ class TraitFormatSpec extends FlatSpec with Matchers {
     val doggyJson    = """{"s":"woof!","animalType":{"type":"Dog"}}"""
     val jsResult     = animalFormat.reads(Json.parse(doggyJson))
     jsResult should be(JsError(s"No valid discriminator property 'animalType' found in $doggyJson."))
+  }
+
+  it should "custom name for instance" in {
+    val animalFormat = traitFormat[Animal] << ("hound", format[Dog]) << ("pussy_cat", format[Cat])
+    val houndJson    = """{"s":"woof!","type":"hound"}"""
+    val jsResult     = animalFormat.reads(Json.parse(houndJson))
+    jsResult.get should be(doggy)
+
+    val pussyCatJson    = """{"s":"Meow!","type":"pussy_cat"}"""
+    animalFormat.reads(Json.parse(pussyCatJson)).get should be(kitty)
   }
 }

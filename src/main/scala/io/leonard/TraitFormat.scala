@@ -4,18 +4,20 @@ import io.leonard.TraitFormat.CaseObjectFormat
 import play.api.libs.json._
 
 import scala.reflect.ClassTag
-case class Mapping[A](
+
+private case class Mapping[A](
   name: String,
   format: Format[A]
 )
-class TraitFormat[Supertype] private (val mapping: Map[Class[_], Mapping[Supertype]], discriminator: String) extends Format[Supertype] {
+
+class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]], discriminator: String) extends Format[Supertype] {
 
   def reads(js: JsValue): JsResult[Supertype] = {
     val name = (js \ discriminator).validate[String]
     name match {
-      case JsSuccess(name, _) =>
+      case JsSuccess(extractedName, _) =>
         mapping.values
-          .find(_.name == name)
+          .find(_.name == extractedName)
           .map(_.format)
           .map(_.reads(js))
           .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminator' in $js."))
@@ -36,6 +38,11 @@ class TraitFormat[Supertype] private (val mapping: Map[Class[_], Mapping[Superty
     */
   def <<[Subtype <: Supertype](format: Format[Subtype])(implicit tag: ClassTag[Subtype]): TraitFormat[Supertype] = {
     val newMapping = mapping + (tag.runtimeClass -> Mapping(getName(None, tag.runtimeClass), transform(format)))
+    new TraitFormat[Supertype](newMapping, discriminator)
+  }
+
+  def <<[Subtype <: Supertype](customName: String, format: Format[Subtype])(implicit tag: ClassTag[Subtype]): TraitFormat[Supertype] = {
+    val newMapping = mapping + (tag.runtimeClass -> Mapping(getName(Some(customName), tag.runtimeClass), transform(format)))
     new TraitFormat[Supertype](newMapping, discriminator)
   }
 
