@@ -21,7 +21,7 @@ val commonSettings = Seq(
   scalaVersion := "2.11.8",
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
-  version := "1.0.1"
+  version := "1.1.0"
 )
 
 lazy val `play-json-traits` = project

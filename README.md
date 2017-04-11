@@ -1,6 +1,7 @@
 # play-json-traits
 
 [![Build Status](https://travis-ci.org/leonardehrenfried/play-json-traits.svg?branch=master)](https://travis-ci.org/leonardehrenfried/play-json-traits)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.leonard/play-json-traits_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.leonard%22%20AND%20a%3A%22play-json-traits_2.11%22)
 
 This package allows you read and write traits using `play-json`. It does this
 by adding a discriminator property to the JSON which can be used to identify
