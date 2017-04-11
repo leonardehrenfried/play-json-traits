@@ -24,12 +24,12 @@ val commonSettings = Seq(
   version := "1.0.1"
 )
 
-lazy val `play-json-traits` = project.in(file(".")).
-  settings(commonSettings: _*).
-  settings(
+lazy val `play-json-traits` = project
+  .in(file("."))
+  .settings(commonSettings: _*)
+  .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json" % "2.5.8",
-      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+      "org.scalatest"     %% "scalatest" % "3.0.0" % "test"
     )
   )
-
