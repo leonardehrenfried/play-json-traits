@@ -1,3 +1,5 @@
+import ReleaseTransformations._
+
 val scalacOpts = Seq(
   "-target:jvm-1.8",
   "-encoding",
@@ -22,6 +24,21 @@ val commonSettings = Seq(
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
   version := "1.2.0"
+)
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(action = Command.process("publishSigned", _)),
+  setNextVersion,
+  commitNextVersion,
+  ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+  pushChanges
 )
 
 lazy val `play-json-traits` = project
