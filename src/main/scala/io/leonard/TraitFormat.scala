@@ -5,12 +5,12 @@ import play.api.libs.json._
 
 import scala.reflect.ClassTag
 
-case class Mapping[A](
+private case class Mapping[A](
   name: String,
   format: Format[A]
 )
 
-class TraitFormat[Supertype] private (val mapping: Map[Class[_], Mapping[Supertype]], discriminatorProperty: String) extends Format[Supertype] {
+class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]], discriminatorProperty: String) extends Format[Supertype] {
 
   def reads(js: JsValue): JsResult[Supertype] = {
     val name = (js \ discriminatorProperty).validate[String]
