@@ -22,8 +22,7 @@ val scalacOpts = Seq(
 val commonSettings = Seq(
   scalaVersion := "2.11.8",
   organization := "io.leonard",
-  scalacOptions ++= scalacOpts,
-  version := "1.2.0"
+  scalacOptions ++= scalacOpts
 )
 
 releaseProcess := Seq[ReleaseStep](
