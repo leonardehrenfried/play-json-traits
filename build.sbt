@@ -20,7 +20,8 @@ val scalacOpts = Seq(
 )
 
 val commonSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.11.11",
+  crossScalaVersions := Seq("2.11.11", "2.12.2"),
   organization := "io.leonard",
   scalacOptions ++= scalacOpts
 )
