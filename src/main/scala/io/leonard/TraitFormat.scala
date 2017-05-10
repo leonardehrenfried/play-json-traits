@@ -51,9 +51,8 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
     <<(customName, caseObjectFormat.format)
 
   private def transform[Subtype <: Supertype](name: String, in: Format[Subtype]): Format[Supertype] = new Format[Supertype] {
-    override def writes(o: Supertype): JsValue = {
+    override def writes(o: Supertype): JsValue =
       in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminatorProperty -> JsString(name))
-    }
     override def reads(json: JsValue): JsResult[Supertype] = in.reads(json)
   }
 
