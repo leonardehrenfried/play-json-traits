@@ -12,4 +12,7 @@ before_cache:
   # Tricks to avoid unnecessary cache updates
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
   - find $HOME/.sbt -name "*.lock" -delete
+  - du -sh $HOME/.sbt/boot
+  - du -sh $HOME/.ivy2/cache
+
 script: sbt ++$TRAVIS_SCALA_VERSION test
