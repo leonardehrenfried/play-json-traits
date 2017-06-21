@@ -46,7 +46,7 @@ lazy val `play-json-traits` = project
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json"   % "2.6.0-M7",
+      "com.typesafe.play" %% "play-json"   % "2.6.0",
       "org.joda"          % "joda-convert" % "1.8.1" % "provided",
       "org.scalatest"     %% "scalatest"   % "3.0.1" % "test"
     )
