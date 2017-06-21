@@ -19,12 +19,15 @@ val scalacOpts = Seq(
   //"-Ywarn-unused-import"
 )
 
+
 val commonSettings = Seq(
   scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.2"),
   organization := "io.leonard",
   scalacOptions ++= scalacOpts
 )
+
+releaseCrossBuild := true
 
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
