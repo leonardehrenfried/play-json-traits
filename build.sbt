@@ -37,10 +37,10 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
+  ReleaseStep(action = "publishSigned" :: _, enableCrossBuild = true),
   setNextVersion,
   commitNextVersion,
-  ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+  ReleaseStep(action = "sonatypeReleaseAll" :: _, enableCrossBuild = true),
   pushChanges
 )
 
@@ -49,8 +49,8 @@ lazy val `play-json-traits` = project
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json"   % "2.6.0",
-      "org.joda"          % "joda-convert" % "1.8.1" % "provided",
-      "org.scalatest"     %% "scalatest"   % "3.0.1" % "test"
+      "com.typesafe.play" %% "play-json"   % "2.6.2",
+      "org.joda"          % "joda-convert" % "1.8.2" % "provided",
+      "org.scalatest"     %% "scalatest"   % "3.0.3" % "test"
     )
   )
