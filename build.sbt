@@ -32,6 +32,12 @@ val commonSettings = Seq(
 
 releaseCrossBuild := true
 
+import ReleaseTransformations._
+
+releaseCrossBuild := true
+
+releasePublishArtifactsAction := PgpKeys.publishSigned.value // Use publishSigned in publishArtifacts step
+
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
@@ -40,10 +46,10 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  ReleaseStep(action = "publishSigned" :: _, enableCrossBuild = true),
+  publishArtifacts,
   setNextVersion,
   commitNextVersion,
-  ReleaseStep(action = "sonatypeReleaseAll" :: _, enableCrossBuild = true),
+  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
 
