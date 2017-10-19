@@ -10,18 +10,21 @@ private case class Mapping[A](
   format: Format[A]
 )
 
-class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]], discriminatorProperty: String) extends Format[Supertype] {
+class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]], discriminatorProperty: String, containerProperty: String)
+  extends Format[Supertype] {
 
   def reads(js: JsValue): JsResult[Supertype] = {
     val name = (js \ discriminatorProperty).validate[String]
-    name match {
-      case JsSuccess(extractedName, _) =>
+    val content = (js \ containerProperty).validate[JsValue]
+    (name, content) match {
+      case (JsSuccess(extractedName, _), JsSuccess(extractedContent, _)) =>
         mapping.values
           .find(_.name == extractedName)
           .map(_.format)
-          .map(_.reads(js))
+          .map(_.reads(extractedContent))
           .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminatorProperty' in $js."))
-      case _ => JsError(s"No valid discriminator property '$discriminatorProperty' found in $js.")
+      case (JsError(_), _) => JsError(s"No valid discriminator property '$discriminatorProperty' found in $js.")
+      case (_, JsError(_)) => JsError(s"No valid container property '$containerProperty' found in $js.")
     }
   }
 
@@ -32,7 +35,7 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
 
   def <<[Subtype <: Supertype](customName: String, format: Format[Subtype])(implicit tag: ClassTag[Subtype]): TraitFormat[Supertype] = {
     val newMapping = mapping + (tag.runtimeClass -> Mapping(customName, transform(customName, format)))
-    new TraitFormat[Supertype](newMapping, discriminatorProperty)
+    new TraitFormat[Supertype](newMapping, discriminatorProperty, containerProperty)
   }
 
   /**
@@ -51,8 +54,10 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
     <<(customName, caseObjectFormat.format)
 
   private def transform[Subtype <: Supertype](name: String, in: Format[Subtype]): Format[Supertype] = new Format[Supertype] {
-    override def writes(o: Supertype): JsValue =
-      in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminatorProperty -> JsString(name))
+    override def writes(o: Supertype): JsValue = Json.obj(
+      containerProperty -> in.writes(o.asInstanceOf[Subtype]).as[JsObject],
+      discriminatorProperty -> JsString(name)
+    )
     override def reads(json: JsValue): JsResult[Supertype] = in.reads(json)
   }
 
@@ -60,9 +65,11 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
 }
 
 object TraitFormat {
-  val defaultDiscriminator                                  = "type"
-  def traitFormat[T]: TraitFormat[T]                        = traitFormat(defaultDiscriminator)
-  def traitFormat[T](discriminator: String): TraitFormat[T] = new TraitFormat[T](Map(), discriminator)
+  val defaultDiscriminator                                  = "name"
+  val defaultContainer                                      = "value"
+  def traitFormat[T]: TraitFormat[T]                        = traitFormat(defaultDiscriminator, defaultContainer)
+  def traitFormat[T](discriminator: String): TraitFormat[T] = new TraitFormat[T](Map(), discriminator, defaultContainer)
+  def traitFormat[T](discriminator: String, container: String): TraitFormat[T] = new TraitFormat[T](Map(), discriminator, container)
 
   class CaseObjectFormat[T](private[TraitFormat] val format: Format[T])
 
