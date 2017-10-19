@@ -34,7 +34,7 @@ val kitty = Cat("Meow!")
 
 val animalFormat = traitFormat[Animal] << format[Dog] << format[Cat] << caseObjectFormat(Nessy)
 
-animalFormat.writes(doggy).toString
+val doggyJson = animalFormat.writes(doggy).toString
 
 // returns {"s":"woof!","type":"Dog"}
 
@@ -44,6 +44,7 @@ animal1 == doggy
 animalFormat.writes(kitty).toString() == """{"s":"Meow!","type":"Cat"}"""
 
 ```
+More examples can be found in the [spec](https://github.com/leonardehrenfried/play-json-traits/blob/master/src/test/scala/io/leonard/TraitFormatSpec.scala#L18).
 
 ## Customisation
 
