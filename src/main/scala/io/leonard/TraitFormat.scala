@@ -5,25 +5,12 @@ import play.api.libs.json._
 
 import scala.reflect.ClassTag
 
-private case class Mapping[A](
-  name: String,
-  format: Format[A]
-)
 
-class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]], discriminatorProperty: String) extends Format[Supertype] {
+class TraitFormat[Supertype] private (serializationStrategy: SerializationStrategy, mapping: Map[Class[_], Mapping[Supertype]])
+  extends Format[Supertype] {
 
-  def reads(js: JsValue): JsResult[Supertype] = {
-    val name = (js \ discriminatorProperty).validate[String]
-    name match {
-      case JsSuccess(extractedName, _) =>
-        mapping.values
-          .find(_.name == extractedName)
-          .map(_.format)
-          .map(_.reads(js))
-          .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminatorProperty' in $js."))
-      case _ => JsError(s"No valid discriminator property '$discriminatorProperty' found in $js.")
-    }
-  }
+
+  def reads(js: JsValue): JsResult[Supertype] = serializationStrategy.reads[Supertype](js, mapping)
 
   def writes(f: Supertype): JsValue = {
     val format = mapping.get(f.getClass).map(_.format)
@@ -32,7 +19,7 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
 
   def <<[Subtype <: Supertype](customName: String, format: Format[Subtype])(implicit tag: ClassTag[Subtype]): TraitFormat[Supertype] = {
     val newMapping = mapping + (tag.runtimeClass -> Mapping(customName, transform(customName, format)))
-    new TraitFormat[Supertype](newMapping, discriminatorProperty)
+    new TraitFormat[Supertype](serializationStrategy, newMapping)
   }
 
   /**
@@ -51,8 +38,7 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
     <<(customName, caseObjectFormat.format)
 
   private def transform[Subtype <: Supertype](name: String, in: Format[Subtype]): Format[Supertype] = new Format[Supertype] {
-    override def writes(o: Supertype): JsValue =
-      in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminatorProperty -> JsString(name))
+    override def writes(o: Supertype): JsValue = serializationStrategy.writes(o, name, in)
     override def reads(json: JsValue): JsResult[Supertype] = in.reads(json)
   }
 
@@ -60,9 +46,9 @@ class TraitFormat[Supertype] private (mapping: Map[Class[_], Mapping[Supertype]]
 }
 
 object TraitFormat {
-  val defaultDiscriminator                                  = "type"
-  def traitFormat[T]: TraitFormat[T]                        = traitFormat(defaultDiscriminator)
-  def traitFormat[T](discriminator: String): TraitFormat[T] = new TraitFormat[T](Map(), discriminator)
+  def traitFormat[T]: TraitFormat[T] = traitFormat(serialisationStrategy = MergedObject)
+  def traitFormat[T](discriminator: String): TraitFormat[T] = traitFormat(serialisationStrategy = new MergedObject(discriminator))
+  def traitFormat[T](serialisationStrategy: SerializationStrategy): TraitFormat[T] = new TraitFormat[T](serialisationStrategy, Map())
 
   class CaseObjectFormat[T](private[TraitFormat] val format: Format[T])
 

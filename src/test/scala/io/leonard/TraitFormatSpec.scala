@@ -1,19 +1,12 @@
 package io.leonard
 
-import io.leonard.TraitFormat.{traitFormat, caseObjectFormat}
+import io.leonard.AnimalSpec._
+import io.leonard.TraitFormat.{caseObjectFormat, traitFormat}
 import org.scalatest.{FlatSpec, Matchers}
 import play.api.libs.json.Json.format
 import play.api.libs.json._
 
-class TraitFormatSpec extends FlatSpec with Matchers {
-
-  sealed trait Animal
-  case class Dog(s: String) extends Animal
-  case class Cat(s: String) extends Animal
-  case object Nessy         extends Animal
-
-  val doggy = Dog("woof!")
-  val kitty = Cat("Meow!")
+class TraitFormatSpec extends FlatSpec with Matchers  {
 
   "TraitFormat" should "serialise" in {
 
