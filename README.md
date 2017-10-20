@@ -14,7 +14,7 @@ The library is deployed to Maven Central.
 Add the following to your `build.sbt`:
 
 ```
-"io.leonard" % "play-json-traits" %% "$version"
+libraryDependencies += "io.leonard" %% "play-json-traits" % "$version"
 ```
 
 ## Example usage
