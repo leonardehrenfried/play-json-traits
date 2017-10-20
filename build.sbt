@@ -51,6 +51,13 @@ releaseProcess := Seq[ReleaseStep](
   pushChanges
 )
 
+publishTo := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+  else
+    Opts.resolver.sonatypeStaging
+)
+
 lazy val `play-json-traits` = project
   .in(file("."))
   .settings(commonSettings: _*)
