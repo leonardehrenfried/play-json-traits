@@ -33,7 +33,7 @@ class SubPropertySerializationStrategySpec extends FlatSpec with Matchers  {
   }
 
   it should "put discriminator in the JSON" in {
-    val animalFormat = traitFormat[Animal](new SubProperty("animalType", "value")) << format[Dog] << format[Cat]
+    val animalFormat = traitFormat[Animal](SubProperty("animalType", "value")) << format[Dog] << format[Cat]
     val doggyJson    = """{"value":{"s":"woof!"},"animalType":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
 
@@ -42,7 +42,7 @@ class SubPropertySerializationStrategySpec extends FlatSpec with Matchers  {
   }
 
   it should "put discriminator and container name in the JSON" in {
-    val animalFormat = traitFormat[Animal](new SubProperty("animalType", "data")) << format[Dog] << format[Cat]
+    val animalFormat = traitFormat[Animal](SubProperty("animalType", "data")) << format[Dog] << format[Cat]
     val doggyJson    = """{"data":{"s":"woof!"},"animalType":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
 

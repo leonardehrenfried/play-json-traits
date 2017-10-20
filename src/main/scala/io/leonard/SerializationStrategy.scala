@@ -22,7 +22,7 @@ sealed trait SerializationStrategy {
   * @param discriminatorProperty
   * @param containerProperty
   */
-class SubProperty(val discriminatorProperty: String, val containerProperty: String) extends SerializationStrategy {
+case class SubProperty(discriminatorProperty: String, containerProperty: String) extends SerializationStrategy {
   override def reads[Supertype](js: JsValue, mapping: Map[Class[_], ClassMapping[Supertype]]): JsResult[Supertype] = {
     val discriminator = (js \ discriminatorProperty).validate[String]
     val content       = (js \ containerProperty).validate[JsObject]
@@ -58,7 +58,7 @@ object SubProperty extends SubProperty("type", "value") {}
   *
   * @param discriminatorProperty
   */
-class MergedObject(val discriminatorProperty: String) extends SerializationStrategy {
+case class MergedObject(discriminatorProperty: String) extends SerializationStrategy {
   override def reads[Supertype](js: JsValue, mapping: Map[Class[_], ClassMapping[Supertype]]): JsResult[Supertype] = {
     val name = (js \ discriminatorProperty).validate[String]
     name match {
