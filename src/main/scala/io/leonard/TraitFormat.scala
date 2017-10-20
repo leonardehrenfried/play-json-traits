@@ -5,7 +5,7 @@ import play.api.libs.json._
 
 import scala.reflect.ClassTag
 
-class TraitFormat[Supertype] private (serializationStrategy: SerializationStrategy, mapping: Map[Class[_], Mapping[Supertype]]) extends Format[Supertype] {
+class TraitFormat[Supertype] private (serializationStrategy: SerializationStrategy, mapping: Map[Class[_], ClassMapping[Supertype]]) extends Format[Supertype] {
 
   def reads(js: JsValue): JsResult[Supertype] = serializationStrategy.reads[Supertype](js, mapping)
 
@@ -15,7 +15,7 @@ class TraitFormat[Supertype] private (serializationStrategy: SerializationStrate
   }
 
   def <<[Subtype <: Supertype](customName: String, format: Format[Subtype])(implicit tag: ClassTag[Subtype]): TraitFormat[Supertype] = {
-    val newMapping = mapping + (tag.runtimeClass -> Mapping(customName, transform(customName, format)))
+    val newMapping = mapping + (tag.runtimeClass -> ClassMapping(customName, transform(customName, format)))
     new TraitFormat[Supertype](serializationStrategy, newMapping)
   }
 

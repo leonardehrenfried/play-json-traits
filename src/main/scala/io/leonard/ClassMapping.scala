@@ -2,7 +2,7 @@ package io.leonard
 
 import play.api.libs.json.Format
 
-case class Mapping[A](
+case class ClassMapping[A](
   name: String,
   format: Format[A]
 )

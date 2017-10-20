@@ -5,8 +5,8 @@ import play.api.libs.json._
 /**
   * A serializationStrategy is responsible of serialized JSON content organisation
   */
-trait SerializationStrategy {
-  def reads[Supertype](js: JsValue, mapping: Map[Class[_], Mapping[Supertype]]): JsResult[Supertype]
+sealed trait SerializationStrategy {
+  def reads[Supertype](js: JsValue, mapping: Map[Class[_], ClassMapping[Supertype]]): JsResult[Supertype]
   def writes[Supertype, Subtype](o: Supertype, name: String, in: Format[Subtype]): JsValue
 }
 
@@ -23,7 +23,7 @@ trait SerializationStrategy {
   * @param containerProperty
   */
 class SubProperty(val discriminatorProperty: String, val containerProperty: String) extends SerializationStrategy {
-  override def reads[Supertype](js: JsValue, mapping: Map[Class[_], Mapping[Supertype]]): JsResult[Supertype] = {
+  override def reads[Supertype](js: JsValue, mapping: Map[Class[_], ClassMapping[Supertype]]): JsResult[Supertype] = {
     val discriminator = (js \ discriminatorProperty).validate[String]
     val content       = (js \ containerProperty).validate[JsObject]
     (discriminator, content) match {
@@ -59,7 +59,7 @@ object SubProperty extends SubProperty("type", "value") {}
   * @param discriminatorProperty
   */
 class MergedObject(val discriminatorProperty: String) extends SerializationStrategy {
-  override def reads[Supertype](js: JsValue, mapping: Map[Class[_], Mapping[Supertype]]): JsResult[Supertype] = {
+  override def reads[Supertype](js: JsValue, mapping: Map[Class[_], ClassMapping[Supertype]]): JsResult[Supertype] = {
     val name = (js \ discriminatorProperty).validate[String]
     name match {
       case JsSuccess(extractedName, _) =>
