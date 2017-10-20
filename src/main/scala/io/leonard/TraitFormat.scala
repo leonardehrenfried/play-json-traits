@@ -5,10 +5,7 @@ import play.api.libs.json._
 
 import scala.reflect.ClassTag
 
-
-class TraitFormat[Supertype] private (serializationStrategy: SerializationStrategy, mapping: Map[Class[_], Mapping[Supertype]])
-  extends Format[Supertype] {
-
+class TraitFormat[Supertype] private (serializationStrategy: SerializationStrategy, mapping: Map[Class[_], Mapping[Supertype]]) extends Format[Supertype] {
 
   def reads(js: JsValue): JsResult[Supertype] = serializationStrategy.reads[Supertype](js, mapping)
 
@@ -38,7 +35,7 @@ class TraitFormat[Supertype] private (serializationStrategy: SerializationStrate
     <<(customName, caseObjectFormat.format)
 
   private def transform[Subtype <: Supertype](name: String, in: Format[Subtype]): Format[Supertype] = new Format[Supertype] {
-    override def writes(o: Supertype): JsValue = serializationStrategy.writes(o, name, in)
+    override def writes(o: Supertype): JsValue             = serializationStrategy.writes(o, name, in)
     override def reads(json: JsValue): JsResult[Supertype] = in.reads(json)
   }
 
@@ -46,8 +43,8 @@ class TraitFormat[Supertype] private (serializationStrategy: SerializationStrate
 }
 
 object TraitFormat {
-  def traitFormat[T]: TraitFormat[T] = traitFormat(serialisationStrategy = MergedObject)
-  def traitFormat[T](discriminator: String): TraitFormat[T] = traitFormat(serialisationStrategy = new MergedObject(discriminator))
+  def traitFormat[T]: TraitFormat[T]                                               = traitFormat(serialisationStrategy = MergedObject)
+  def traitFormat[T](discriminator: String): TraitFormat[T]                        = traitFormat(serialisationStrategy = new MergedObject(discriminator))
   def traitFormat[T](serialisationStrategy: SerializationStrategy): TraitFormat[T] = new TraitFormat[T](serialisationStrategy, Map())
 
   class CaseObjectFormat[T](private[TraitFormat] val format: Format[T])

@@ -25,7 +25,7 @@ trait SerializationStrategy {
 class SubProperty(val discriminatorProperty: String, val containerProperty: String) extends SerializationStrategy {
   override def reads[Supertype](js: JsValue, mapping: Map[Class[_], Mapping[Supertype]]): JsResult[Supertype] = {
     val discriminator = (js \ discriminatorProperty).validate[String]
-    val content = (js \ containerProperty).validate[JsObject]
+    val content       = (js \ containerProperty).validate[JsObject]
     (discriminator, content) match {
       case (JsSuccess(extractedName, _), JsSuccess(extractedContent, _)) =>
         mapping.values
@@ -35,18 +35,17 @@ class SubProperty(val discriminatorProperty: String, val containerProperty: Stri
           .getOrElse(JsError(s"Could not find deserialisation format for discriminator '$discriminatorProperty' in $js."))
       case (JsError(_), JsSuccess(_, _)) => JsError(s"No valid discriminator property '$discriminatorProperty' found in $js.")
       case (JsSuccess(_, _), JsError(_)) => JsError(s"No valid container property '$containerProperty' found in $js.")
-      case (JsError(_), JsError(_)) => JsError(s"No valid discriminator property '$discriminatorProperty' nor container property '$containerProperty' found in $js.")
+      case (JsError(_), JsError(_)) =>
+        JsError(s"No valid discriminator property '$discriminatorProperty' nor container property '$containerProperty' found in $js.")
     }
   }
   def writes[Supertype, Subtype](o: Supertype, name: String, in: Format[Subtype]): JsValue = Json.obj(
-    containerProperty -> in.writes(o.asInstanceOf[Subtype]).as[JsObject],
+    containerProperty     -> in.writes(o.asInstanceOf[Subtype]).as[JsObject],
     discriminatorProperty -> JsString(name)
   )
 }
 
-object SubProperty extends SubProperty("type", "value") {
-
-}
+object SubProperty extends SubProperty("type", "value") {}
 
 /**
   * MergedObject strategy will format JSON like this
@@ -73,9 +72,8 @@ class MergedObject(val discriminatorProperty: String) extends SerializationStrat
     }
   }
 
-  override def writes[Supertype, Subtype](o: Supertype, name: String, in: Format[Subtype]): JsValue = {
+  override def writes[Supertype, Subtype](o: Supertype, name: String, in: Format[Subtype]): JsValue =
     in.writes(o.asInstanceOf[Subtype]).as[JsObject] + (discriminatorProperty -> JsString(name))
-  }
 }
 
 object MergedObject extends MergedObject("type")
