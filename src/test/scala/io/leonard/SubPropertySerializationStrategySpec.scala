@@ -10,7 +10,7 @@ class SubPropertySerializationStrategySpec extends FlatSpec with Matchers  {
 
   "TraitFormat with SubProperty serialization strategy" should "serialise" in {
 
-    val animalFormat = traitFormat[Animal](serialisationStrategy = SubProperty) << format[Dog] << format[Cat]
+    val animalFormat = traitFormat[Animal](serializationStrategy = SubProperty) << format[Dog] << format[Cat]
 
     val doggyJson = """{"value":{"s":"woof!"},"type":"Dog"}"""
     animalFormat.writes(doggy).toString() should be(doggyJson)
@@ -26,7 +26,7 @@ class SubPropertySerializationStrategySpec extends FlatSpec with Matchers  {
   }
 
   it should "serialise a case object" in {
-    val animalFormat = traitFormat[Animal](serialisationStrategy = SubProperty) << format[Dog] << format[Cat] << caseObjectFormat(Nessy)
+    val animalFormat = traitFormat[Animal](serializationStrategy = SubProperty) << format[Dog] << format[Cat] << caseObjectFormat(Nessy)
     val nessyJson    = """{"value":{},"type":"Nessy"}"""
     animalFormat.writes(Nessy) should be(Json.parse(nessyJson))
     animalFormat.reads(Json.parse(nessyJson)).get should be(Nessy)

@@ -43,9 +43,9 @@ class TraitFormat[Supertype] private (serializationStrategy: SerializationStrate
 }
 
 object TraitFormat {
-  def traitFormat[T]: TraitFormat[T]                                               = traitFormat(serialisationStrategy = MergedObject)
-  def traitFormat[T](discriminator: String): TraitFormat[T]                        = traitFormat(serialisationStrategy = new MergedObject(discriminator))
-  def traitFormat[T](serialisationStrategy: SerializationStrategy): TraitFormat[T] = new TraitFormat[T](serialisationStrategy, Map())
+  def traitFormat[T]: TraitFormat[T]                                               = traitFormat(serializationStrategy = MergedObject)
+  def traitFormat[T](discriminator: String): TraitFormat[T]                        = traitFormat(serializationStrategy = new MergedObject(discriminator))
+  def traitFormat[T](serializationStrategy: SerializationStrategy): TraitFormat[T] = new TraitFormat[T](serializationStrategy, Map())
 
   class CaseObjectFormat[T](private[TraitFormat] val format: Format[T])
 
