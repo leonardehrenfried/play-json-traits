@@ -30,8 +30,6 @@ val commonSettings = Seq(
   scalacOptions ++= scalacOpts
 )
 
-releaseCrossBuild := true
-
 import ReleaseTransformations._
 
 releaseCrossBuild := true
