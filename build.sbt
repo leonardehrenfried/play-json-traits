@@ -1,4 +1,5 @@
 import ReleaseTransformations._
+import xerial.sbt.Sonatype._
 
 val scalacOpts = Seq(
   "-target:jvm-1.8",
@@ -27,7 +28,8 @@ val commonSettings = Seq(
   scalaVersion := scala212,
   crossScalaVersions := Seq(scala212, scala211),
   organization := "io.leonard",
-  scalacOptions ++= scalacOpts
+  scalacOptions ++= scalacOpts,
+  sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits"))
 )
 
 import ReleaseTransformations._
