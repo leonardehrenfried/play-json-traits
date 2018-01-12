@@ -29,7 +29,7 @@ val commonSettings = Seq(
   crossScalaVersions := Seq(scala212, scala211),
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
-  sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits")),
+  sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits", "mail@leonard.io")),
   licenses := Seq("Apache2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 )
 
