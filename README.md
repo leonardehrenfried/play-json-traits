@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/leonardehrenfried/play-json-traits.svg?branch=master)](https://travis-ci.org/leonardehrenfried/play-json-traits)
 [![Latest version](https://img.shields.io/maven-central/v/io.leonard/play-json-traits_2.12.svg?style=flat-square)](https://index.scala-lang.org/leonardehrenfried/play-json-traits/play-json-traits)
 
-This package allows you read and write traits using `play-json`. It does this
-by adding a discriminator property to the JSON which can be used to identify
+This package allows you read and write traits (not just sealed ones) using `play-json`. 
+It does this by adding a discriminator property to the JSON which can be used to identify
 the precise implementation when parsing the JSON back to Scala.
 
 ## Installation
