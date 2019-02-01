@@ -1,7 +1,7 @@
 import ReleaseTransformations._
 import xerial.sbt.Sonatype._
 
-val scalacOpts = Seq(
+def scalacOpts(scalaVersion: String) = Seq(
   "-target:jvm-1.8",
   "-encoding",
   "UTF-8",
@@ -12,13 +12,23 @@ val scalacOpts = Seq(
   "-Xlint", // recommended additional warnings
   "-Xcheckinit", // runtime error when a val is not initialized due to trait hierarchies (instead of NPE somewhere else)
   "-Xfatal-warnings", // all warnings become errors
-//  "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver
-//  "-Ywarn-value-discard", // Warn when non-Unit expression results are unused
-//  "-Ywarn-inaccessible",
-//  "-Ywarn-dead-code",
-//  "-Ywarn-unused"
-  //"-Ywarn-unused-import"
-)
+) ++
+  (CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, 11)) => Seq(
+      "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver
+      "-Ywarn-value-discard", // Warn when non-Unit expression results are unused
+      "-Ywarn-inaccessible",
+      "-Ywarn-dead-code",
+      "-Ywarn-unused"
+    )
+    case _ => Seq(
+      "-Xlint:adapted-args", // Warn if an argument list is modified to match the receiver
+      "-Ywarn-value-discard", // Warn when non-Unit expression results are unused
+      "-Xlint:inaccessible",
+      "-Ywarn-dead-code",
+      "-Ywarn-unused:_"
+    )
+  })
 
 
 val scala213 = "2.13.0-M5"
@@ -29,7 +39,7 @@ val commonSettings = Seq(
   scalaVersion := scala212,
   crossScalaVersions := Seq(scala213, scala212, scala211),
   organization := "io.leonard",
-  scalacOptions ++= scalacOpts,
+  scalacOptions ++= scalacOpts(scalaVersion.value),
   sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits", "mail@leonard.io")),
   licenses := Seq("Apache2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 )
