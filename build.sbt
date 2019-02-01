@@ -12,21 +12,22 @@ val scalacOpts = Seq(
   "-Xlint", // recommended additional warnings
   "-Xcheckinit", // runtime error when a val is not initialized due to trait hierarchies (instead of NPE somewhere else)
   "-Xfatal-warnings", // all warnings become errors
-  "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver
-  "-Ywarn-value-discard", // Warn when non-Unit expression results are unused
-  "-Ywarn-inaccessible",
-  "-Ywarn-dead-code",
-  "-Ywarn-unused"
+//  "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver
+//  "-Ywarn-value-discard", // Warn when non-Unit expression results are unused
+//  "-Ywarn-inaccessible",
+//  "-Ywarn-dead-code",
+//  "-Ywarn-unused"
   //"-Ywarn-unused-import"
 )
 
 
+val scala213 = "2.13.0-M5"
 val scala212 = "2.12.3"
 val scala211 = "2.11.11"
 
 val commonSettings = Seq(
   scalaVersion := scala212,
-  crossScalaVersions := Seq(scala212, scala211),
+  crossScalaVersions := Seq(scala213, scala212, scala211),
   organization := "io.leonard",
   scalacOptions ++= scalacOpts,
   sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits", "mail@leonard.io")),
@@ -66,8 +67,8 @@ lazy val `play-json-traits` = project
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json"   % "2.6.3",
+      "com.typesafe.play" %% "play-json"   % "2.7.1",
       "org.joda"          % "joda-convert" % "1.8.2" % "provided",
-      "org.scalatest"     %% "scalatest"   % "3.0.4" % "test"
+      "org.scalatest"     %% "scalatest"   % "3.0.6-SNAP5" % "test"
     )
   )
