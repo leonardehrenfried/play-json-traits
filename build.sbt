@@ -21,7 +21,7 @@ val scalacOpts = Seq(
 )
 
 
-val scala212 = "2.12.3"
+val scala212 = "2.12.8"
 val scala211 = "2.11.11"
 
 val commonSettings = Seq(
