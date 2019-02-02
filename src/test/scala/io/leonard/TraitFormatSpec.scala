@@ -32,6 +32,15 @@ class TraitFormatSpec extends FlatSpec with Matchers  {
     animalFormat.reads(Json.parse(nessyJson)).get should be(Nessy)
   }
 
+  it should "serialise nested" in {
+    val mammalFormat = traitFormat[Mammal] << format[Dog] << format[Cat]
+    val animalFormat = traitFormat[Animal] << mammalFormat << caseObjectFormat(Nessy)
+
+    val doggyJson = """{"s":"woof!","type":"Dog"}"""
+    animalFormat.writes(doggy).toString() should be(doggyJson)
+
+  }
+
   it should "put discriminator in the JSON" in {
     val animalFormat = traitFormat[Animal]("animalType") << format[Dog] << format[Cat]
     val doggyJson    = """{"s":"woof!","animalType":"Dog"}"""
