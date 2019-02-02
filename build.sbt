@@ -36,7 +36,7 @@ val scala212 = "2.12.8"
 
 val commonSettings = Seq(
   scalaVersion := scala212,
-  crossScalaVersions := Seq(scala213, scala212, scala211),
+  crossScalaVersions := Seq(scala213, scala212),
   organization := "io.leonard",
   scalacOptions ++= scalacOpts(scalaVersion.value),
   sonatypeProjectHosting := Some(GithubHosting("leonardehrenfried", "play-json-traits", "mail@leonard.io")),
