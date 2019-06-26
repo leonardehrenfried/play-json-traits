@@ -1,7 +1,7 @@
 sudo: false
 language: scala
 scala:
-  - 2.13.0-M5
+  - 2.13.0
   - 2.12.8
 jdk: openjdk11
 cache:

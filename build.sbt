@@ -31,7 +31,7 @@ def scalacOpts(scalaVersion: String) = Seq(
   })
 
 
-val scala213 = "2.13.0-M5"
+val scala213 = "2.13.0"
 val scala212 = "2.12.8"
 
 val commonSettings = Seq(
@@ -76,8 +76,8 @@ lazy val `play-json-traits` = project
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json"   % "2.7.1",
+      "com.typesafe.play" %% "play-json"   % "2.7.4",
       "org.joda"          % "joda-convert" % "1.8.2" % "provided",
-      "org.scalatest"     %% "scalatest"   % "3.0.6-SNAP5" % "test"
+      "org.scalatest"     %% "scalatest"   % "3.0.8" % "test"
     )
   )
